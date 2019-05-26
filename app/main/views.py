@@ -37,7 +37,8 @@ def new_pitch(id):
         new_pitch.save_pitch() 
         # return user to home after logging in  
         return redirect(url_for('.index'))
-    
+ 
+# Add new comment   
 @main.route('/new/comment/<int: id>', methods = ['GET', 'POST'])
 @login_required
 def new_comment(id):
@@ -53,3 +54,21 @@ def new_comment(id):
         new_comment = Comments(comment_title = title, comment = comment, useer = current_user)
         new_comment.save_comment()
         return redirect(url_for('.index'))
+    
+# Access user profile
+@main.route('/user/<uname>')
+@login_required
+def profile(uname):
+    """
+    profile function to enable user access their own profile
+    """
+    # Querying database for user information
+    user = User.query.filter_by(username = uname)
+    # Accessing the pitches available in the database
+    index = Pitch.query.all()
+    # checking if the user exists in the database
+    if user is None:
+        abort(404)
+        
+    return render_template('profile/profile.html', user = user, index = index)
+
