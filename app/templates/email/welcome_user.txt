@@ -1,0 +1,5 @@
+Hello {{user.username}}
+Welcome to Pitcher
+Thank you for signing up with us. 
+We wish to welcome you to the Pitch family.
+Share your ideas with fellow pitchers and view others opinions as well.
