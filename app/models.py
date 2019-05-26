@@ -48,6 +48,11 @@ class User (UserMixin, db.Model):
         # inbuilt function to compare passwords
         return check_password_hash(self.password_hash,password)
     
+    from . import login_manager
+    
+    @login_manager.user_loader
+    def load_user(self,user_id):
+        return User.query.get(int(user_id))
 
 
 class Pitch(db.Model):
