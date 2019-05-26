@@ -50,6 +50,7 @@ class User (UserMixin, db.Model):
     
     def __repr__(self):
         return f'User{self.username}'
+    
     from . import login_manager
     
     @login_manager.user_loader
@@ -72,6 +73,13 @@ class Pitch(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     pitch = db.relationship("Comments", backref="pitches", lazy="dynamic")
 
+    def save_pitch(self):
+        """
+        save pitch method to save new pitches created by 
+        users to the database
+        """
+        db.session.add(self)
+        db.session.commit()
 
 class Comments(db.Model):
     """
