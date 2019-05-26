@@ -39,7 +39,7 @@ def new_pitch(id):
         return redirect(url_for('.index'))
  
 # Add new comment   
-@main.route('/new/comment/<int: id>', methods = ['GET', 'POST'])
+@main.route('/new/comment/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def new_comment(id):
     """
@@ -96,7 +96,7 @@ def update_profile(uname):
         return redirect(url_for('.profile', uname = user.username))
     return render_template('profile/update.html', form=form)
 
-@main.route('/user/<uname>/updat/pic', methods =['POST'])
+@main.route('/user/<uname>/update/pic', methods =['POST'])
 @login_required
 def update_pic(uname):
     user = User.query.filter_by(username=uname).first()
