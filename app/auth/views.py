@@ -4,7 +4,7 @@ from ..models import User
 from .forms import RegistrationForm, LoginForm
 from .. import db
 from flask_login import login_user, logout_user, login_required
-# from ..email import mail_message
+from ..email import mail_message
 
 @auth.route('/login')
 def login():
@@ -20,14 +20,14 @@ def login():
         # Querying database for existence of the user through their email address
         user = User.query.filter_by(email =login_form.email.data).first()
         # Checking if the user account exists and the password is correct
-        if user is not None and user.verify_password(login_form.password.data)
+        if user is not None and user.verify_password(login_form.password.data):
             # User is logged in
             login_user(user, login_form.remember.data)
             # After user logs in redirect them to the home page
             return redirect(request.args.get('next') or url_for('main.index'))
         # Flashing alert incase user exists but credentials dont match
         flash('Invalid password or username')
-    title = "login"
+    title = "pitch login"
     # Returning user to the login page incase the form was not validated
     return render_template('auth/login.html', login_form = login_form, title = title )
 
@@ -47,8 +47,9 @@ def register():
         # Saving the user and their credentials to the database
         db.session.commit()
         
-        return reirect(url_for('auth.login'))
-    title = "New Account"
+        mail_message('Welcome to Pitcher','email/welcome_user',user.email,user=user)
+        return redirect(url_for('auth.login'))
+        title = "New Account"
     return render_template('/auth/register.html', registration_form =form)
 
 @auth.route('/logout')
