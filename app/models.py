@@ -48,6 +48,8 @@ class User (UserMixin, db.Model):
         # inbuilt function to compare passwords
         return check_password_hash(self.password_hash,password)
     
+    def __repr__(self):
+        return f'User{self.username}'
     from . import login_manager
     
     @login_manager.user_loader
