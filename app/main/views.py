@@ -63,7 +63,7 @@ def profile(uname):
     profile function to enable user access their own profile
     """
     # Querying database for user information
-    user = User.query.filter_by(username = uname)
+    user = User.query.filter_by(username=uname)
     # Accessing the pitches available in the database
     index = Pitch.query.all()
     # checking if the user exists in the database
@@ -72,3 +72,26 @@ def profile(uname):
         
     return render_template('profile/profile.html', user = user, index = index)
 
+# Allow user to make changes to their own profile
+@main.route('/user/<uname>/update', methods = ['GET','POST'])
+@login_required
+def update_profile(uname):
+    """
+    update_profile function to enable a user to create
+    their bio and add it to their profile
+    """
+    # Check if user has an account
+    user = User.query.filter_by(username=uname)
+    if user is None:
+        abort(404)
+        
+    form = UpdateProfile()
+    
+    if form.validate_on_submit():
+        user.bio = form.bio.data
+        
+        db.session.add(user)
+        db.session.commit()
+        
+        return redirect(url_for('.profile', uname = user.username))
+    return render_template('profile/update.html', form=form)
