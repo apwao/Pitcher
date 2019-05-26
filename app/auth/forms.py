@@ -18,9 +18,17 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField('Sign Up')
     
     def validate_email(self,data_field):
+        """
+        validate_email method to compare user input email to the
+        email saved in database when a user signs in
+        """
         if User.query.filter_by(email = data_field.data).first():
             raise ValidationError("There is an account with email")
     def validate_username(self,data_field):
+        """
+        validate_username method to compare input username to username 
+        saved in the database during logging in
+        """
         if User.query.filter_by(username= data_field.data).first():
             raise ValidationError('That username is taken')
         
