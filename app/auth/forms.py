@@ -24,4 +24,16 @@ class RegistrationForm(FlaskForm):
         if User.query.filter_by(username= data_field.data).first():
             raise ValidationError('That username is taken')
         
-        
+class LoginForm(FlaskForm):
+    """
+    class LoginForm to create a logged in user from the information
+    provided by a user during logging in.
+    
+    Args:
+    FlaskForm: session secure base class provided by flask with csrf protection
+    """
+    email = StringField('Your Email Address',validators=[Required(), Email()])
+    password = PasswordField('Password',validators=[Required(),])
+    remember = BooleanField('Remember me')
+    submit = SubmitField('Sign In')
+    
