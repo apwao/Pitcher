@@ -16,7 +16,7 @@ def index():
     return render_template('index.html', title = title)
 
 # creating a new pitch
-@main.route(/'new/pitch/<int:id>', methods = ['GET', 'POST'])
+@main.route('/new/pitch/<int:id>', methods = ['GET', 'POST'])
 # user must be logged in to create a pitch
 @login_required
 def new_pitch(id):
@@ -38,3 +38,18 @@ def new_pitch(id):
         # return user to home after logging in  
         return redirect(url_for('.index'))
     
+@main.route('/new/comment/<int: id>', methods = ['GET', 'POST'])
+@login_required
+def new_comment(id):
+    """
+    function new_comment that enables a user to comment on a pitch and submit
+    their comment 
+    """
+    form = CommentForm()
+    if form.validate_on_submit():
+        title = form.title.data
+        comment = form.comment.data
+        
+        new_comment = Comments(comment_title = title, comment = comment, useer = current_user)
+        new_comment.save_comment()
+        return redirect(url_for('.index'))
