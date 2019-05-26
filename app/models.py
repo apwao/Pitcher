@@ -30,3 +30,17 @@ class Pitch(db.Model):
     pitchname = db.Column(db.String(200))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     pitch=db.relationship("Comments",backref="pitches", lazy="dynamic")
+    
+class Comments(db.Model):
+    """
+    class comment to create new comment objects to save in the database
+    whenever a user comments on a pitch
+    """
+    __tablename__ = 'comments'
+    
+    id = db.Column(db.Integer, primary_key = True)
+    comment = db.Column(db.String)
+    comment_title = db.Column(db.String)
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
+    pitch_id = db.Column(db.Integer,db.ForeignKey('pitches.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
