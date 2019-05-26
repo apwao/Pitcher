@@ -31,6 +31,24 @@ def login():
     # Returning user to the login page incase the form was not validated
     return render_template('auth/login.html', login_form = login_form, title = title )
 
-@auth.route('')
+@auth.route('/register', methods = ['GET', 'POST'])
+def register():
+    """
+    register function to create a new user in the database
+    when a user signs up for the first time
+    """
+    
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        # Matching user input to the database models
+        user = User(email = form.email.data, username =form.username.data, password=form.password.data)
+        # Adding a new user
+        db.session.add(user)
+        # Saving the user and their credentials to the database
+        db.session.commit()
+        
+        return reirect(url_for('auth.login'))
+    title = "New Account"
+    return render_template('/auth/register.html', registration_form =form)
 
         
