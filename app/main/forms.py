@@ -29,6 +29,6 @@ class CommentForm(FlaskForm):
     postedBy = StringField('PostedBy', validators=[Required()])
     title = StringField('Comment')
     comment = TextAreaField('Please enter a comment')
-    sumit = SubmitField('submit')
+    submit = SubmitField('submit')
     
     
