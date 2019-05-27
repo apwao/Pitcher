@@ -17,11 +17,12 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/"> Pitch </a>
-            <ul class="nav navbar-nav navbar-right">
+            <a class="navbar-brand" href="/"> Home </a>
+            <ul class="nav navbar-nav navbar-left">
                 {% if current_user.is_authenticated %}
                 <li style="color:white;padding:15px;">{{current_user.username}}</li>
                 <li><a href="{{url_for('main.profile',uname =current_user.username)}}">Profile</a></li>
+                <li><a href="{{url_for('main.new_pitch')}}">Create Pitch</a></li>
                 <li><a href="{{url_for('auth.logout')}}">Sign out</a></li>
 
                 {% else %}
