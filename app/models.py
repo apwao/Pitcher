@@ -2,6 +2,11 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from flask_login import UserMixin
+from . import login_manager
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 
 class User (UserMixin, db.Model):
@@ -16,13 +21,13 @@ class User (UserMixin, db.Model):
     __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), index=True)
-    password_hash = db.Column(db.String(255))
-    users = db.relationship('User', backref='user_no', lazy='dynamic')
-    email = db.Column(db.String(255), unique=True, index=True)
-    bio = db.Column(db.String(255))
+    username = db.Column(db.String(), index=True)
+    password_hash = db.Column(db.String())
+    users = db.relationship('Pitch', backref='user_no', lazy='dynamic')
+    email = db.Column(db.String(), unique=True, index=True)
+    bio = db.Column(db.String())
     profile_pic_path = db.Column(db.String())
-    users_comments = db.relationship('Comments', backref='comments', lazy='dynamic')
+    users_comments = db.relationship('Comments', backref='user_comment', lazy='dynamic')
 
     # making password to be read only
     @property
@@ -50,13 +55,6 @@ class User (UserMixin, db.Model):
     def __repr__(self):
         return f'User{self.username}'
     
-    from . import login_manager
-    
-    @login_manager.user_loader
-    def load_user(self,user_id):
-        return User.query.get(int(user_id))
-
-
 class Pitch(db.Model):
     """
     class Pitch to create instances of new pitches created by
@@ -66,10 +64,12 @@ class Pitch(db.Model):
     db.Model: base class for user model 
     stored in the SQLAlchemy instance db
     """
-    __tablename__="pitches"
+    __tablename__= "pitches"
     id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String(10))
-    pitchname = db.Column(db.String(200))
+    title = db.Column(db.String())
+    category = db.Column(db.String())
+    pitchname = db.Column(db.String)
+    posted = db.Column(db.DateTime, default=datetime.utcnow)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     pitch = db.relationship("Comments", backref="pitches", lazy="dynamic")
 
@@ -89,11 +89,11 @@ class Comments(db.Model):
     __tablename__ = 'comments'
 
     id = db.Column(db.Integer, primary_key=True)
-    comment = db.Column(db.String)
-    comment_title = db.Column(db.String)
+    comment = db.Column(db.String())
+    comment_title = db.Column(db.String())
     posted = db.Column(db.DateTime, default=datetime.utcnow)
     pitch_id = db.Column(db.Integer, db.ForeignKey('pitches.id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('comments.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     def save_comment(self):
         """
