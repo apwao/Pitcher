@@ -22,8 +22,7 @@ class User (UserMixin, db.Model):
     email = db.Column(db.String(255), unique=True, index=True)
     bio = db.Column(db.String(255))
     profile_pic_path = db.Column(db.String())
-    users_comments = db.relationship(
-        'Comments', backref='comments', lazy='dynamic')
+    users_comments = db.relationship('Comments', backref='comments', lazy='dynamic')
 
     # making password to be read only
     @property
@@ -67,6 +66,7 @@ class Pitch(db.Model):
     db.Model: base class for user model 
     stored in the SQLAlchemy instance db
     """
+    __tablename__="pitches"
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(10))
     pitchname = db.Column(db.String(200))
