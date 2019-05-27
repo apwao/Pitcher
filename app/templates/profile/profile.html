@@ -28,6 +28,11 @@
 				<input type="submit">
 			</form>
 		{% endif %}
+		<ul>
+			{% for indice in index %}
+				<li>{{indice.title}}: {{indice.pitchname}}</li>
+			{% endfor %}
+		</ul>
 	</div>
 </div>
 {% endblock %}
