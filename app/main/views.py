@@ -4,6 +4,7 @@ from flask_login import login_required, current_user
 from ..models import User, Pitch, Comments
 from .. import db, photos
 from .forms import UpdateProfile, PitchForm, CommentForm
+import markdown2
 
 # home page
 @main.route('/')
@@ -12,14 +13,15 @@ def index():
     index function to render the home page anytime a user 
     logs into the application
     """
+    pitches = Pitch.query.all()
     title = 'Pitch'
-    return render_template('index.html', title = title)
+    return render_template('index.html', title = title, pitches = pitches)
 
 # creating a new pitch
-@main.route('/new/pitch/<int:id>', methods = ['GET', 'POST'])
 # user must be logged in to create a pitch
+@main.route('/new/pitch', methods = ['GET', 'POST'])
 @login_required
-def new_pitch(id):
+def new_pitch():
     """
     function new_pitch to enable a user to input and submit their
     new pitch and have it saved in the database
@@ -31,29 +33,35 @@ def new_pitch(id):
     form = PitchForm()
     if form.validate_on_submit():
         pitch = form.pitch.data
+        title = form.title.data
+        category =form.category.data
         
         # matching user input to model for pitches in database
-        new_pitch = Pitch(pitchname = pitch, category =form.category.data, user = current_user  )
+        new_pitch = Pitch(pitchname = pitch, category =category, title = title)
         new_pitch.save_pitch() 
         # return user to home after logging in  
         return redirect(url_for('.index'))
+    return render_template("new_pitch.html", form=form)
  
 # Add new comment   
-@main.route('/new/comment/<int:id>', methods = ['GET', 'POST'])
+@main.route('/comment/<int:id>', methods = ['GET', 'POST'])
 @login_required
 def new_comment(id):
     """
     function new_comment that enables a user to comment on a pitch and submit
     their comment 
     """
+    comments=Comments.query.filter_by(id=id).all()
     form = CommentForm()
+    pitch = Pitch.query.filter_by(id=id).first()
     if form.validate_on_submit():
         title = form.title.data
         comment = form.comment.data
         
-        new_comment = Comments(comment_title = title, comment = comment, useer = current_user)
+        new_comment = Comments(comment_title = title, comment = comment, user_comment=current_user, pitch_id=id)
         new_comment.save_comment()
-        return redirect(url_for('.index'))
+        return redirect(url_for('.new_comment',id=pitch.id))
+    return render_template('comment.html',form=form, pitch=pitch, comments=comments)
     
 # Access user profile
 @main.route('/user/<uname>')
@@ -69,7 +77,7 @@ def profile(uname):
     # checking if the user exists in the database
     if user is None:
         abort(404)
-        
+       
     return render_template('profile/profile.html', user = user, index = index)
 
 # Allow user to make changes to their own profile
@@ -99,6 +107,11 @@ def update_profile(uname):
 @main.route('/user/<uname>/update/pic', methods =['POST'])
 @login_required
 def update_pic(uname):
+    """
+    update pic function to facilitate uploading a profile photo and
+    saving it to the database as well as displaying the profile picture 
+    on the page
+    """
     user = User.query.filter_by(username=uname).first()
     if 'photo' in request.files:
         filename = photos.save(request.files['photo'])
@@ -108,3 +121,23 @@ def update_pic(uname):
         
         db.session.commit()
     return redirect(url_for('main.profile', uname=uname))
+
+@main.route('/pitch/<int:id>')
+def view_pitch(id):
+    """
+    view_pitch function to help user view a specific pitch by clicking on it
+    """
+    pitch = Pitch.query.get(id)
+
+    return render_template('pitch.html', pitch = pitch)
+
+@main.route('/comment/<int:id>')
+def view_comment(id):
+    """
+    view_comment function to help user view a specific comment upon 
+    clicking on it
+    """
+    comment = Comments.query.get(id)
+    
+    return render_template('comment.html',comment = comment)
+    
