@@ -6,7 +6,7 @@ from .. import db
 from flask_login import login_user, logout_user, login_required
 from ..email import mail_message
 
-@auth.route('/login')
+@auth.route('/login', methods =['GET','POST'])
 def login():
     """
     login function bound to the login route that verifies
