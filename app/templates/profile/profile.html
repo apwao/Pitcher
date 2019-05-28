@@ -1,38 +1,56 @@
 {% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block styles%}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/profile.css')}}">
+{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="row">
-		<!-- displaying  Username-->
-		<div class="col-md-4">
-			<h3>{{user.username | capitalize }}</h3>
-			<!--Displaying user bio-->
-			{% if user.bio %}
-				<p>{{ user.bio }}</p>
-			{% else %}
-			<p>{{user.username| capitalize}} has no bio</p>
-			{% endif %}
-		</div>
-		<div class="col-md-4">
-		<!--Display profile photo-->
-			{% if user.profile_pic_path %}
-			<img src="{{url_for('static', filename=user.profile_pic_path)}}" alt="" class="img-thumbnail">
-			{% else %}
-			<p>No profile picture</p>
-			{%endif%}
-		</div>
-		{% if user == current_user %}
-		<a href="{{url_for('main.update_profile',uname=user.username)}}">Edit profile</a>
-			<form action = "{{url_for('main.update_pic',uname=user.username)}}" method = 'POST' enctype ='multipart/form-data'>
-				<input type="file" name="photo" class="form-control" required>
-				<input type="submit">
-			</form>
+<div class="container" id="fonts">
+	<body background="{{url_for('static',filename='photos/elevator.jpg')}}">
+	<div class="row">
+	<!-- displaying  Username-->
+	<div class="col-md-2">
+		<h3>{{current_user.username | capitalize }}</h3>
+		<!--Displaying user bio-->
+		{% if current_user.bio %}
+			<p>{{ current_user.bio }}</p>
+		{% else %}
+		<p>{{current_user.username| capitalize}} has no bio</p>
 		{% endif %}
-		<ul>
-			{% for indice in index %}
-				<li>{{indice.title}}: {{indice.pitchname}}</li>
-			{% endfor %}
-		</ul>
+		<!--Display profile photo-->
+		{% if current_user.profile_pic_path %}
+		<img src="{{url_for('static', filename=current_user.profile_pic_path)}}" alt="" class="img-thumbnail">
+		{% else %}
+		<p>No profile picture</p>
+		{%endif%}
+		<br>
+		<hr>
+		<br>
+		<a href="{{url_for('main.update_profile',uname=current_user.username)}}">Edit profile</a>
+		
+	</div>
+		<div class="col-md-6">
+			<div class="card">
+				<div class="card-header">
+					<h3>My Pitches</h3>
+				</div>
+				<div class="card-body"> 
+				{% for indice in index %}
+					<blockquote class="blockquote mb-0">
+						<h5>{{indice.title}}</h5>
+						<p>{{indice.pitchname}}</p>
+					</blockquote>
+					<hr>
+				{% endfor %}
+				</div>
+			</div>
+			<div class="col-md-2"></div>
+			<div class="col-md-2"></div>
+		</div>
+	</div>
 	</div>
 </div>
+</body>
 {% endblock %}
