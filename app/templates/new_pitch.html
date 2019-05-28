@@ -2,13 +2,16 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content%}
+<body background="{{url_for('static',filename='photos/elevator.jpg')}}">
     <div class="container">
-        <div class="col-md-8">
-            
+        <div class="col-md-3">   
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
             {{ wtf.quick_form(form)}}
             {{simplemde.load}}
         </div>
+        <div class="col-md-3"></div>
     </div>
+    <hr>
+</body>
 {% endblock %}
