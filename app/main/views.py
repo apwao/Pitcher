@@ -37,7 +37,7 @@ def new_pitch():
         category =form.category.data
         
         # matching user input to model for pitches in database
-        new_pitch = Pitch(pitchname = pitch, category =category, title = title)
+        new_pitch = Pitch(pitchname = pitch, category =category, title = title, posted_by=current_user.username)
         new_pitch.save_pitch() 
         # return user to home after logging in  
         return redirect(url_for('.index'))
@@ -46,21 +46,22 @@ def new_pitch():
 # Add new comment   
 @main.route('/comment/<int:id>', methods = ['GET', 'POST'])
 @login_required
-def new_comment(id):
+def comment(id):
     """
     function new_comment that enables a user to comment on a pitch and submit
     their comment 
     """
-    comments=Comments.query.filter_by(id=id).all()
-    form = CommentForm()
     pitch = Pitch.query.filter_by(id=id).first()
+    comments=Comments.query.filter_by(pitch_id=pitch.id).all()
+    form = CommentForm()
+    
     if form.validate_on_submit():
         title = form.title.data
         comment = form.comment.data
         
-        new_comment = Comments(comment_title = title, comment = comment, user_comment=current_user, pitch_id=id)
+        new_comment = Comments(comment_title = title, comment = comment, user_comment=current_user, pitch_id=id, posted_by=current_user.username)
         new_comment.save_comment()
-        return redirect(url_for('.new_comment',id=pitch.id))
+        return redirect(url_for('.comment',id=pitch.id))
     return render_template('comment.html',form=form, pitch=pitch, comments=comments)
     
 # Access user profile
@@ -88,21 +89,36 @@ def update_profile(uname):
     update_profile function to enable a user to create
     their bio and add it to their profile
     """
-    # Check if user has an account
-    user = User.query.filter_by(username=uname)
+    # # Check if user has an account
+    # user = User.query.filter_by(username=uname)
+    # if user is None:
+    #     abort(404)
+        
+    # update_form = UpdateProfile()
+    
+    # if update_form.validate_on_submit():
+    #     user.bio = update_form.bio.data
+        
+    #     db.session.add(user)
+    #     db.session.commit()
+        
+    #     return redirect(url_for('.profile', uname = user.username))
+    # return render_template('profile/update.html', update_form=update_form)
+    user = User.query.filter_by(username=uname).first()
     if user is None:
         abort(404)
         
     form = UpdateProfile()
-    
     if form.validate_on_submit():
         user.bio = form.bio.data
         
         db.session.add(user)
         db.session.commit()
         
-        return redirect(url_for('.profile', uname = user.username))
+        return redirect(url_for('.profile', uname=user.username))
     return render_template('profile/update.html', form=form)
+    
+    
 
 @main.route('/user/<uname>/update/pic', methods =['POST'])
 @login_required
