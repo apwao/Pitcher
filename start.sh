@@ -1,4 +1,4 @@
-export SECRET_KEY='what the hell GOT'
+export SECRET_KEY='whatthehellgot'
 export MAIL_USERNAME='pasowayi@gmail.com'
 export MAIL_PASSWORD='40A79jkL3B2i'
 export DATABASE_URL='postgresql+psycopg2://sowayi:Sowasse@localhost/pitcher'
