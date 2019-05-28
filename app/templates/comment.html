@@ -1,17 +1,36 @@
 {% extends 'base.html' %}
 {% import 'bootstrap/wtf.html' as wtf %}
 
+{% block styles%}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/comment.css')}}">
+{% endblock %}
+
+
 {% block content%}
-    <div class="col-md-8">
+<body background="{{url_for('static',filename='photos/elevator.jpg')}}">
+    <div class="container">
+    <div class="row">
+    <div class="col-md-3 pitch_display">
         {{pitch.pitchname}}
     </div>
-    <div class="col-md-4">
+    <div class="col-md-6">
         {{ wtf.quick_form(form)}}
         {{simplemde.load}}
     </div>
-    <ul>
-        {% for comment in comments %}
-            <li>{{comment.comment}}</li>
-        {% endfor %}
-    </ul>
+    <div class="col-md-3"></div>
+</div>
+<div class="row">
+    <hr>
+    <h1 class="text-center comment_header">Comments</h1>
+    <hr>
+    {% for comment in comments %}
+    <div class="panel panel-default">
+        <div class="panel-heading">{{comment.comment_title}}</div>
+        <div class="panel-body">{{comment.comment}}</div>
+    </div>
+    {% endfor%}
+</div>
+</div>
+</body>
 {% endblock %}
