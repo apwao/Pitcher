@@ -35,13 +35,14 @@ def create_app(config_name):
     simple.init_app(app)
     mail.init_app(app)
     
+    
     # Registering blue prints
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
     
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix = '/authenticate')
-    
+    configure_uploads(app,photos)
     
     
     return app
