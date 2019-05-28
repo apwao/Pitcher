@@ -23,7 +23,7 @@ class ProdConfig(Config):
     Production configuration class inheriting
     from the main Main Configuration class
     """
-    pass
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
 
 class DevConfig(Config):
     """
