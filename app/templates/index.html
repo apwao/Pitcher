@@ -1,45 +1,90 @@
 {% extends 'base.html' %}
 
+{% block styles%}
+{{ super() }}
+<link rel="stylesheet" href="{{url_for('static',filename='css/index.css')}}">
+{% endblock %}
+
+
 {%block content%}
+<body background="static/photos/elevator.jpg" id="">
     <div class="container">
-        <h3>Pickup lines</h3>
-            <ul class="list-group">
-                {% for pitch in pitches %}
-                    {% if pitch.category == 'Pickup' %}
-                    <li class="list-group-item"><a href="{{url_for('main.new_comment', id=pitch.id)}}">{{pitch.title}}</a></li>
-                    <p>{{pitch.pitchname}}</p>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        
-        <h3>Product pitch</h3>
-            <ul class="list-group">
-                {% for pitch in pitches %}
-                    {% if pitch.category == 'Product' %}
-                        <li class="list-group-item"><a>{{pitch.title}}</a></li>
-                        <p>{{pitch.pitchname}}</p>
-                    {% endif %}
-                {% endfor %}
-            </ul>
-        <h3>Interview pitch</h3>
-            <ul class="list-group">
-                {% for pitch in pitches %}
-                    {% if pitch.category == 'Interview' %}
-                        <li class="list-group-item"><a>{{pitch.title}}</a></li>
-                        <p>{{pitch.pitchname}}</p>
-                    {% endif %}
-                {% endfor %}
-                
-            </ul>
-            <h3>Promotion pitch</h3>
-            <ul class="list-group">
-                {% for pitch in pitches %}
-                    {% if pitch.category == 'Promotion' %}
-                        <li class="list-group-item"><a>{{pitch.title}}</a></li>
-                        <p>{{pitch.pitchname}}</p>
-                    {% endif %}
-                {% endfor %}
-                
-            </ul>
-    </div>
+        <div id="vl"></div>
+        <div class="row">
+            <div class="col-md-3">
+                <div class="card" id="cards">
+                    <div class="card-header">
+                        <h3>Pickup lines</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for pitch in pitches %}
+                            {% if pitch.category == 'Pickup' %}
+                                <blockquote class="blockquote mb-0">
+                                    <li class=><a href="{{url_for('main.comment', id=pitch.id)}}">{{pitch.title}}</a></li>
+                                    <p>{{pitch.pitchname}}</p>
+                                    
+                                    <footer class="blockquote-footer">The infamous: <cite title="pitcher">{{pitch.posted_by}} {{pitch.posted}}</cite></footer>
+                                </blockquote>
+                                {% endif %}
+                        {% endfor %}      
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+            <div class="card bg-light text-dark" id="cards">
+                    <div class="card-header">
+                        <h3>Product pitches</h3>
+                    </div>
+                    <div class="card-body">
+                        {% for pitch in pitches %}
+                            {% if pitch.category == 'Product' %}
+                                <blockquote class="blockquote mb-0">
+                                    <li class=><a href="{{url_for('main.comment', id=pitch.id)}}">{{pitch.title}}</a></li>
+                                    <p>{{pitch.pitchname}}</p>
+                                    <footer class="blockquote-footer">The infamous: <cite title="pitcher">{{pitch.posted_by}} {{pitch.posted}}</cite></footer>
+                                </blockquote>
+                                {% endif %}
+                        {% endfor %}      
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card bg-light text-dark" id="cards">
+                        <div class="card-header">
+                            <h3>Interview Pitches</h3>
+                        </div>
+                        <div class="card-body">
+                            {% for pitch in pitches %}
+                                {% if pitch.category == 'Interview' %}
+                                    <blockquote class="blockquote mb-0">
+                                        <li class=><a href="{{url_for('main.comment', id=pitch.id)}}">{{pitch.title}}</a></li>
+                                        <p>{{pitch.pitchname}}</p>
+                                        <footer class="blockquote-footer">The infamous: <cite title="pitcher">{{pitch.posted_by}} {{pitch.posted}}</cite></footer>
+                                    </blockquote>
+                                    {% endif %}
+                            {% endfor %}      
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3" id="pitches">
+                    <div class="card" id="cards">
+                            <div class="card-header">
+                                <h3>Promotion pitches</h3>
+                            </div>
+                            <div class="card-body">
+                                {% for pitch in pitches %}
+                                    {% if pitch.category == 'Promotion' %}
+                                        <blockquote class="blockquote mb-0">
+                                            <li class=><a href="{{url_for('main.comment', id=pitch.id)}}">{{pitch.title}}</a></li>
+                                            <p>{{pitch.pitchname}}</p>
+                                            <footer class="blockquote-footer">The infamous: <cite title="pitcher">{{pitch.posted_by}} {{pitch.posted}}</cite></footer>
+                                        </blockquote>
+                                        {% endif %}
+                                {% endfor %}      
+                            </div>
+                        </div>
+                    </div>
+        </div>
 {%endblock%}
+    </div>
+</body>
