@@ -17,7 +17,6 @@ class PitchForm(FlaskForm):
     a user to enable them to create and submit their pitches
     """
     title = StringField('Title')
-    postedBy = StringField('Posted by', validators=[Required()])
     pitch = TextAreaField('Pitch')
     category = SelectField('Choose a category for your pitch', choices=[('Interview', 'Interview'),('Product','Product'),('Pickup','Pickup'),('Promotion','Promotion')])
     submit = SubmitField('Submit')
@@ -27,7 +26,7 @@ class CommentForm(FlaskForm):
     class CommentForm that renders form fields to enable a user to comment 
     on the pitches submitted by others
     """
-    postedBy = StringField('PostedBy', validators=[Required()])
+    
     title = StringField('Comment')
     comment = TextAreaField('Please enter a comment')
     submit = SubmitField('submit')
