@@ -74,7 +74,7 @@ def profile(uname):
     # Querying database for user information
     user = User.query.filter_by(username=uname)
     # Accessing the pitches available in the database
-    index = Pitch.query.all()
+    index = Pitch.query.filter_by(user_id=current_user.id).all()
     # checking if the user exists in the database
     if user is None:
         abort(404)
